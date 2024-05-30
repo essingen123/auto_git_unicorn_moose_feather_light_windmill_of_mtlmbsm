@@ -1,0 +1,18 @@
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+# Ignore IDE files
+*.iml
+.idea
+.vscode
+# Ignore sensitive files
+.env
+*.pem
+# Ignore log and build files
+*.log
+build/
+dist/
+*.o
+*.exe
+*.dll
+*.so
