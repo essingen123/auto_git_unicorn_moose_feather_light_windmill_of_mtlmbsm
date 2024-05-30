@@ -88,6 +88,7 @@ setup_github_repo() {
             git commit -m "Add .gitignore"
         fi
     fi
+
     # Check if the repository already exists on GitHub
     repo_exists=$(gh repo view "$repo_name" --json name --jq '.name' 2>/dev/null)
     if [ -z "$repo_exists" ]; then
@@ -121,20 +122,8 @@ setup_github_repo() {
         fi
     fi
 
-
-
     echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
 }
-    # Check and potentially generate the HTML page
-    if [ ! -f "index.html" ]; then
-        echo "index.html not found. Generating HTML page from README.md..."
-        python3 _extra_bonus.py
-    else
-        echo "If you wish to also have that cool HTML page, you can run the following command to generate a neat webpage for your GitHub project: ./_extra_bonus.py"
-    fi
-# Check for necessary tool installations
-command -v git >/dev/null 2>&1 || { echo >&2 "git is not installed. Aborting."; exit 1; }
-command -v gh >/dev/null 2>&1 || { echo >&2 "GitHub CLI is not installed. Aborting."; exit 1; }
 
 # Call update_bashrc to check and update .bashrc
 update_bashrc
@@ -164,4 +153,12 @@ else
     git commit -m "Syncing changes with GitHub"
     git push origin master
     echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
+fi
+
+# Check and potentially generate the HTML page
+if [ ! -f "index.html" ]; then
+    echo "index.html not found. Generating HTML page from README.md..."
+    python3 _extra_bonus.py
+else
+    echo "If you wish to also have that cool HTML page, you can run the following command to generate a neat webpage for your GitHub project: ./_extra_bonus.py"
 fi
