@@ -88,7 +88,6 @@ setup_github_repo() {
             git commit -m "Add .gitignore"
         fi
     fi
-
     # Check if the repository already exists on GitHub
     repo_exists=$(gh repo view "$repo_name" --json name --jq '.name' 2>/dev/null)
     if [ -z "$repo_exists" ]; then
@@ -98,7 +97,7 @@ setup_github_repo() {
     # Add all files and commit
     git add .
     git commit -m "Initial commit: Setting up GitHub repository"
-    git remote add origin "https://github.com/essingen123/${repo_name}.git"
+    git remote add origin "https://github.com/$(git config user.name)/${repo_name}.git"
     git push --set-upstream origin master
     git push origin master
 
@@ -126,6 +125,8 @@ setup_github_repo() {
     if [ ! -f "index.html" ]; then
         echo "index.html not found. Generating HTML page from README.md..."
         python3 _extra_bonus.py
+    else
+        echo "If you wish to also have that cool HTML page, you can run the following command to generate a neat webpage for your GitHub project: ./_extra_bonus.py"
     fi
 
     echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
