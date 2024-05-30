@@ -121,6 +121,10 @@ setup_github_repo() {
         fi
     fi
 
+
+
+    echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
+}
     # Check and potentially generate the HTML page
     if [ ! -f "index.html" ]; then
         echo "index.html not found. Generating HTML page from README.md..."
@@ -128,10 +132,6 @@ setup_github_repo() {
     else
         echo "If you wish to also have that cool HTML page, you can run the following command to generate a neat webpage for your GitHub project: ./_extra_bonus.py"
     fi
-
-    echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
-}
-
 # Check for necessary tool installations
 command -v git >/dev/null 2>&1 || { echo >&2 "git is not installed. Aborting."; exit 1; }
 command -v gh >/dev/null 2>&1 || { echo >&2 "GitHub CLI is not installed. Aborting."; exit 1; }
