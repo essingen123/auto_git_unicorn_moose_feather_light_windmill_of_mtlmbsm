@@ -1,5 +1,5 @@
 # Auto Git Unicorn Moose Feather Light Windmill of MTLMBSM
-![Auto Git Unicorn Moose Feather Light Windmill](auto_git_unicorn_moose_feather_light_windmill_of_mtlmbsm.webp)
+![Auto Git Unicorn Moose Feather Light Windmill](auto_git_unicorn_moose_feather_light_windmill.webp)
 
 This script automates the initial setup of a git repository with enhanced interactive features. It handles the creation of `.gitignore`, `README.md`, and the GitHub repository setup based on user input.
 
