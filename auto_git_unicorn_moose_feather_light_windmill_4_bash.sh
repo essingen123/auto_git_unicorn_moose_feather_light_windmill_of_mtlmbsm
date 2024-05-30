@@ -23,18 +23,18 @@ add_alias_to_bashrc() {
     echo "Alias 'g' added to .bashrc. Please restart your terminal or source ~/.bashrc."
 }
 
-# Prompt for GitHub token and update .bashrc if needed
+# Prompt for GitHub token and update a hidden file if needed
 check_github_token() {
-    if [[ -z "${GITHUB_TOKEN}" ]]; then
+    local token_file="$HOME/.git_very_secret_and_ignored_file_token"
+    if [ ! -f "$token_file" ]; then
         echo "GitHub token not found in your environment."
-        read -p "Would you like to enter your GitHub token? (It will be saved in .bashrc for future sessions) (y/n) " yn
+        read -p "Would you like to enter your GitHub token? (It will be saved in a hidden file for future sessions) (y/n) " yn
         if [[ "$yn" == "y" ]]; then
             read -s -p "Enter your GitHub token: " token
             echo
-            local token_cmd="export GITHUB_TOKEN='$token'"
-            update_bashrc "$token_cmd"
-            export GITHUB_TOKEN="$token"
-            echo "GitHub token set for this session and saved for future sessions. Please restart your terminal or source ~/.bashrc."
+            echo "$token" > "$token_file"
+            chmod 600 "$token_file"
+            echo "GitHub token set for this session and saved for future sessions."
         fi
     else
         echo "GitHub token is already set."
@@ -46,6 +46,7 @@ read_config() {
     config_file="kigit.txt"
     repo_name="random"
     public="n"
+    auto_page="n"
 
     if [ -f "$config_file" ]; then
         while IFS= read -r line; do
@@ -58,6 +59,9 @@ read_config() {
             elif [[ -z "$public_set" ]]; then
                 public_set=true
                 public="$line"
+            elif [[ -z "$auto_page_set" ]]; then
+                auto_page_set=true
+                auto_page="$line"
             fi
         done < "$config_file"
     fi
@@ -70,6 +74,12 @@ read_config() {
         visibility="--public"
     else
         visibility="--private"
+    fi
+
+    if [ "$auto_page" == "y" ]; then
+        auto_page_trigger=true
+    else
+        auto_page_trigger=false
     fi
 }
 
@@ -166,6 +176,8 @@ if [ ! -d ".git" ]; then
 random
 #public git, y for yes n for no, standard no
 n
+#auto generate HTML page, y for yes n for no
+n
 EOL
             echo "Created kigit.txt. Please edit this file and re-run the script."
             exit 0
@@ -183,8 +195,8 @@ else
 fi
 
 # Check and potentially generate the HTML page
-if [ ! -f "index.html" ]; then
-    echo "index.html not found. Generating HTML page from README.md..."
+if [ "$auto_page_trigger" = true ] || [ ! -f "index.html" ]; then
+    echo "index.html not found or auto page generation enabled. Generating HTML page from README.md..."
     python3 _extra_bonus.py
 else
     echo "If you wish to also have that cool HTML page, you can run the following command to generate a neat webpage for your GitHub project: ./_extra_bonus.py"

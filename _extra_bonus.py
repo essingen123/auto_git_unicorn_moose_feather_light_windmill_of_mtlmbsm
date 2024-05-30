@@ -1,4 +1,7 @@
-import os, subprocess, requests, sys
+import os
+import subprocess
+import requests
+import sys
 
 def get_git_config(key):
     try:
@@ -89,9 +92,12 @@ def main():
         print("Repository name could not be determined.")
         return
 
-    github_token = os.getenv('GITHUB_TOKEN')
-    if not github_token:
-        print("GITHUB_TOKEN not found. Please set it in your environment variables.")
+    token_file = os.path.expanduser("~/.git_very_secret_and_ignored_file_token")
+    if os.path.exists(token_file):
+        with open(token_file, 'r') as file:
+            github_token = file.read().strip()
+    else:
+        print("GitHub token not found. Please set it in your environment variables or save it in the specified file.")
         return
 
     create_html_page()
