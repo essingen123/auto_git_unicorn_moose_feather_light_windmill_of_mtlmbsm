@@ -122,6 +122,12 @@ setup_github_repo() {
         fi
     fi
 
+    # Check and potentially generate the HTML page
+    if [ ! -f "index.html" ]; then
+        echo "index.html not found. Generating HTML page from README.md..."
+        python3 _extra_bonus.py
+    fi
+
     echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
 }
 
