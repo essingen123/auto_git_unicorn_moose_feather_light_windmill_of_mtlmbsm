@@ -3,13 +3,41 @@
 # Path for the script
 script_path="$(pwd)/$(basename "$0")"
 
-# Check and add alias to .bashrc
+# Function to update .bashrc with new alias or environment variable
 update_bashrc() {
-    if grep -q "alias g='" ~/.bashrc; then
-        echo "Alias 'g' already exists in .bashrc."
+    local entry="$1"
+    local file="$HOME/.bashrc"
+
+    if ! grep -qF "$entry" "$file"; then
+        echo "$entry" >> "$file"
+        echo "Added $entry to $file"
     else
-        echo "alias g='${script_path}'" >> ~/.bashrc
-        echo "Alias 'g' added to .bashrc. Please restart your terminal or source ~/.bashrc."
+        echo "$entry already exists in $file"
+    fi
+}
+
+# Check and add alias to .bashrc
+add_alias_to_bashrc() {
+    local alias_cmd="alias g='${script_path}'"
+    update_bashrc "$alias_cmd"
+    echo "Alias 'g' added to .bashrc. Please restart your terminal or source ~/.bashrc."
+}
+
+# Prompt for GitHub token and update .bashrc if needed
+check_github_token() {
+    if [[ -z "${GITHUB_TOKEN}" ]]; then
+        echo "GitHub token not found in your environment."
+        read -p "Would you like to enter your GitHub token? (It will be saved in .bashrc for future sessions) (y/n) " yn
+        if [[ "$yn" == "y" ]]; then
+            read -s -p "Enter your GitHub token: " token
+            echo
+            local token_cmd="export GITHUB_TOKEN='$token'"
+            update_bashrc "$token_cmd"
+            export GITHUB_TOKEN="$token"
+            echo "GitHub token set for this session and saved for future sessions. Please restart your terminal or source ~/.bashrc."
+        fi
+    else
+        echo "GitHub token is already set."
     fi
 }
 
@@ -48,6 +76,8 @@ read_config() {
 # Function to setup GitHub repository
 setup_github_repo() {
     read_config
+    add_alias_to_bashrc
+    check_github_token
 
     # Initialize git if not already initialized
     if [ ! -d ".git" ]; then
@@ -124,9 +154,6 @@ setup_github_repo() {
 
     echo "Git sync unicorn moose blazing away a turn in that windmill party! 🎉"
 }
-
-# Call update_bashrc to check and update .bashrc
-update_bashrc
 
 # Main logic
 if [ ! -d ".git" ]; then
