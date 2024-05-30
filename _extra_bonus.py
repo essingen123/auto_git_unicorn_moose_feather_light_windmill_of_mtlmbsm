@@ -79,11 +79,13 @@ def create_html_page():
         with open('index.html', 'w') as html_file:
             html_file.write(full_html)
         print("index.html created successfully.")
+    else:
+        print("Failed to create index.html.")
 
 def main():
-    if input("Do you want to install required packages? (y/n) ").lower() == 'y':
-        if not install_requirements():
-            return
+    # Ensure required packages are installed
+    if not install_requirements():
+        return
 
     user = get_git_config('user.name')
     repo_url = get_git_config('remote.origin.url')
